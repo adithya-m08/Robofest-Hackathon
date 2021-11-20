@@ -3,8 +3,6 @@ import cv2
 import serial
 import time
 
-from PathDetection.imgproc import Ser
-
 cap = cv2.VideoCapture(0)
 c1=0
 linecolor = (100, 215, 255) 
@@ -63,7 +61,7 @@ while True:
         Ser.write(b'S')
         c1+=1
         if(c1==5):
-            # Ser.write(b'b')
+            Ser.write(b'b')
             c1=0
         
     cv2.imshow("Frame", frame)
