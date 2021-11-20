@@ -40,7 +40,10 @@ while True:
                     (topLeft[0], topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX,
                     0.5, (0, 255, 0), 2)
 
-        print(markerID)
+        if markerID==0:
+            print("left")
+        elif markerID==1:
+            print("right")
 
     cv2.imshow("final", img)
     if cv2.waitKey(1) & 0xff == ord('q'):
