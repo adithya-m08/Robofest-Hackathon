@@ -1,17 +1,18 @@
 import numpy as np
 import cv2
-import serial
+# import serial
 import time
 
 cap = cv2.VideoCapture(0)
 c1=0
 linecolor = (100, 215, 255) 
 lwr_black = np.array([0, 0, 0])
-upper_black = np.array([10, 10, 40])
+upper_black = np.array([180, 255, 30])
 
-Ser = serial.Serial("/dev/ttyACM0", baudrate=9600)
-Ser.flush()
-width=cap.get(3)
+# Ser = serial.Serial("/dev/ttyACM0", baudrate=9600)
+# Ser.flush()
+width=cap.get(4)
+# print(width)
 
 while True:
     ret, frame = cap.read()
@@ -32,33 +33,37 @@ while True:
         M = cv2.moments(c)
         center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
         if radius > 3:
-            #cv2.circle(frame, (int(x), int(y)), int(radius), (255, 255, 255), 2)
             cv2.circle(frame, center, 5, linecolor, -1)
+        cv2.circle(frame, (320, 465), 5, (0, 255, 0), thickness=2)
+        # print(center)
+
+        cv2.line(frame, center, (320, 465), (0, 255, 0), thickness=2, lineType=-1)
+
+        if center[0] != 320:
+            slope = (465 - center[1])/(320 - center[0])
+            print(slope)
         
-        if(x>0 and x<=0.25*width):
-            print("L")
-            Ser.write(b"l")
-            time.sleep(0.01)
-            
-        elif(x >0.25*width and x<=0.75*width):
-            print('F')
-            Ser.write(b'f')
-            time.sleep(0.01)
-            
-        elif(x >0.75*width and x<=width):
-            print("R")
-            Ser.write(b"r")
-            time.sleep(0.01)
+        if slope < 0.0 and slope > -3.0:
+            frame = cv2.putText(frame, "Going right", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
+        
+        elif slope > 0.0 and slope < 3.0:
+            frame = cv2.putText(frame, "Going left", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
+
+        
+        else:
+            frame = cv2.putText(frame, "Going straight", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
+
+
     else:
         print("Track Not Visible")
         c1+=1
         if(c1==5):
-            Ser.write(b'b')
+            # Ser.write(b'b')
             c1=0
         
     cv2.imshow("Frame", frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()
-        Ser.close()
+        # Ser.close()
         cv2.destroyAllWindows()
         break
