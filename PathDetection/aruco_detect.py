@@ -40,7 +40,7 @@ while True:
         cv2.putText(img, str(markerID),
                     (topLeft[0], topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX,
                     0.5, (0, 255, 0), 2)
-
+                    
         markerID = (int(markerID))
         if markerID == 0:
             print(markerID)
@@ -48,7 +48,6 @@ while True:
 
         elif markerID == 1:
             Ser.write(b"R")
-
 
     cv2.imshow("final", img)
     if cv2.waitKey(1) & 0xff == ord('q'):

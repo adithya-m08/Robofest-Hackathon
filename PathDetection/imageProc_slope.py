@@ -9,9 +9,9 @@ linecolor = (100, 215, 255)
 lwr_black = np.array([0, 0, 0])
 upper_black = np.array([180, 255, 30])
 
-Ser = serial.Serial("COM8", baudrate=9600)
+Ser = serial.Serial("/dev/ttyACM0", baudrate=9600)
 Ser.flush()
-width=cap.get(4)
+width=cap.get(3)
 # print(width)
 
 while True:
@@ -43,26 +43,25 @@ while True:
             slope = (465 - center[1])/(320 - center[0])
             print(slope)
         
-        if slope < 0.0 and slope > -3.0:
+        if slope < 0.0 and slope > -5.0:
             frame = cv2.putText(frame, "Going right", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
-            Ser.write(b"R")
+            Ser.write(b'R')
 
-
-        elif slope > 0.0 and slope < 3.0:
+        elif slope > 0.0 and slope < 5.0:
             frame = cv2.putText(frame, "Going left", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
-            Ser.write(b"L")
-
+            Ser.write(b'L')
         
         else:
             frame = cv2.putText(frame, "Going straight", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
-            Ser.write(b"F")
+            Ser.write(b'F')
 
 
     else:
         print("Track Not Visible")
+        Ser.write(b'S')
         c1+=1
         if(c1==5):
-            Ser.write(b'S')
+            Ser.write(b'b')
             c1=0
         
     cv2.imshow("Frame", frame)
