@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-# import serial
+import serial
 import time
 
 cap = cv2.VideoCapture(0)
@@ -9,8 +9,8 @@ linecolor = (100, 215, 255)
 lwr_black = np.array([0, 0, 0])
 upper_black = np.array([180, 255, 30])
 
-# Ser = serial.Serial("/dev/ttyACM0", baudrate=9600)
-# Ser.flush()
+Ser = serial.Serial("COM8", baudrate=9600)
+Ser.flush()
 width=cap.get(4)
 # print(width)
 
@@ -45,20 +45,24 @@ while True:
         
         if slope < 0.0 and slope > -3.0:
             frame = cv2.putText(frame, "Going right", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
-        
+            Ser.write(b"R")
+
+
         elif slope > 0.0 and slope < 3.0:
             frame = cv2.putText(frame, "Going left", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
+            Ser.write(b"L")
 
         
         else:
             frame = cv2.putText(frame, "Going straight", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
+            Ser.write(b"F")
 
 
     else:
         print("Track Not Visible")
         c1+=1
         if(c1==5):
-            # Ser.write(b'b')
+            Ser.write(b'S')
             c1=0
         
     cv2.imshow("Frame", frame)

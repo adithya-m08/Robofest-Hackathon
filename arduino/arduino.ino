@@ -13,15 +13,6 @@ AF_DCMotor BACK_RIGHT_MOTOR(3);
 #define Ki 0
 #define Kd 0
 
-#define leftCenterSensor   19  //analog pin A5
-#define leftNearSensor     18  //analog pin A4
-#define leftFarSensor      17  //analog pin A3
-#define rightCenterSensor  20  //analog pin A6
-#define rightNearSensor    21  //analog pin A7
-#define rightFarSensor      2   //digital pin D2
-#define Lleapsensor        16  //analog pin A2
-#define Rleapsensor        14  //analog pin A0
-#define Vin                15  //analog pin A1
 
 //Motor PWM pins
 #define leftMotor1    3  //forward pin

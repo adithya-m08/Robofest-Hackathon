@@ -1,7 +1,8 @@
 import cv2
-
+import serial
 cap=cv2.VideoCapture(0)
-
+Ser = serial.Serial("COM8", baudrate=9600)
+Ser.flush()
 
 while True:
     s,img=cap.read()
@@ -40,7 +41,14 @@ while True:
                     (topLeft[0], topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX,
                     0.5, (0, 255, 0), 2)
 
-        print(markerID)
+        markerID = (int(markerID))
+        if markerID == 0:
+            print(markerID)
+            Ser.write(b"L")
+
+        elif markerID == 1:
+            Ser.write(b"R")
+
 
     cv2.imshow("final", img)
     if cv2.waitKey(1) & 0xff == ord('q'):
