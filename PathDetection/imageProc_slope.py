@@ -2,6 +2,24 @@ import numpy as np
 import cv2
 import serial
 import time
+#!/usr/bin/env python
+# license removed for brevity
+import rospy
+from std_msgs.msg import String
+
+def talker(data):
+    pub = rospy.Publisher('odd_publisher', String, queue_size=10)
+    rospy.init_node('talker', anonymous=True)
+    rate = rospy.Rate(10) # 10hz
+    # count = 1
+    while not rospy.is_shutdown():
+        hello_str = " %s" % rospy.get_time()
+        # count += 2
+        print(data)
+        # count_str = str(data)
+        rospy.loginfo(hello_str)
+        pub.publish(data)
+        rate.sleep()
 
 cap = cv2.VideoCapture(0)
 c1=0
@@ -9,8 +27,8 @@ linecolor = (100, 215, 255)
 lwr_black = np.array([0, 0, 0])
 upper_black = np.array([180, 255, 30])
 
-Ser = serial.Serial("/dev/ttyACM0", baudrate=9600)
-Ser.flush()
+# Ser = serial.Serial("/dev/ttyACM0", baudrate=9600)
+# Ser.flush()
 width=cap.get(3)
 # print(width)
 
@@ -45,23 +63,26 @@ while True:
         
         if slope < 0.0 and slope > -5.0:
             frame = cv2.putText(frame, "Going right", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
-            Ser.write(b'R')
+            # Ser.write(b'R')
+            talker("right")
 
         elif slope > 0.0 and slope < 5.0:
             frame = cv2.putText(frame, "Going left", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
-            Ser.write(b'L')
+            # Ser.write(b'L')
+            talker("left")
         
         else:
             frame = cv2.putText(frame, "Going straight", (100, 100), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 255), 2)
-            Ser.write(b'F')
+            # Ser.write(b'F')
+            talker("straight")
 
 
     else:
         print("Track Not Visible")
-        Ser.write(b'S')
+        # Ser.write(b'S')
         c1+=1
         if(c1==5):
-            Ser.write(b'b')
+            # Ser.write(b'b')
             c1=0
         
     cv2.imshow("Frame", frame)
